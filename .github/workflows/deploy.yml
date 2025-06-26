@@ -26,7 +26,7 @@ jobs:
         run: flutter pub get
 
       - name: Build web
-        run: flutter build web
+        run: flutter build web --base-href "/0.roulette/"
 
       - name: Add 404.html for SPA routing
         run: cp ./build/web/index.html ./build/web/404.html
