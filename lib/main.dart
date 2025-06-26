@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'dart:async';
+import 'word_lists.dart';
 
 void main() {
-  runApp(const DailyThemeRouletteApp());
+  runApp(const AdjectiveLaboratoryApp());
 }
 
-class DailyThemeRouletteApp extends StatelessWidget {
-  const DailyThemeRouletteApp({super.key});
+class AdjectiveLaboratoryApp extends StatelessWidget {
+  const AdjectiveLaboratoryApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               const SizedBox(height: 20),
               const Text(
-                'adjective Laboratory',
+                '형용사 실험실',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -126,73 +127,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late Animation<double> _nounRotation;
 
   final Random _random = Random();
-
-  final List<String> _adjectives = [
-    // Tech & New Media
-    'interactive',
-    'generative',
-    'kinetic',
-    'immersive',
-    'experimental',
-    'responsive',
-    'procedural',
-    'data-driven',
-    'algorithmic',
-    'bio-inspired',
-    'AI-powered',
-    'sensor-based',
-    'glitchy',
-    'pixel-perfect',
-    'real-time',
-    'crowd-sourced',
-    'augmented',
-    'networked',
-    'open-source',
-    'sustainable',
-    // Classic Artistic
-    'mysterious',
-    'vibrant',
-    'minimalist',
-    'abstract',
-    'surreal',
-    'cosmic',
-    'nostalgic',
-    'futuristic',
-    'organic',
-    'geometric',
-    'dreamy',
-    'dramatic',
-    'peaceful',
-    'chaotic',
-    'elegant',
-    'bold',
-    'subtle',
-    'vintage',
-    'modern'
-  ];
-
-  final List<String> _nouns = [
-    'media installation',
-    'Arduino project',
-    'IoT device',
-    'mobile app',
-    'VR experience',
-    'AR filter',
-    'interactive website',
-    'generative art',
-    'sound visualization',
-    'LED matrix',
-    'motion sensor',
-    'chatbot',
-    'data visualization',
-    'NFT collection',
-    'game prototype',
-    'neural network',
-    'blockchain app',
-    'drone performance',
-    'smart mirror',
-    'wearable tech'
-  ];
 
   String _selectedAdjective = '';
   String _selectedNoun = '';
@@ -238,7 +172,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     await _adjectiveController.forward();
 
     setState(() {
-      _selectedAdjective = _adjectives[_random.nextInt(_adjectives.length)];
+      _selectedAdjective =
+          WordLists.adjectives[_random.nextInt(WordLists.adjectives.length)];
       _isAdjectiveSpinning = false;
     });
 
@@ -257,7 +192,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     await _nounController.forward();
 
     setState(() {
-      _selectedNoun = _nouns[_random.nextInt(_nouns.length)];
+      _selectedNoun = WordLists.nouns[_random.nextInt(WordLists.nouns.length)];
       _isNounSpinning = false;
     });
 
@@ -286,7 +221,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('adjective Laboratory v1.2'),
+        title: const Text('Choose Today\'s Theme!'),
         backgroundColor: Colors.black87,
         foregroundColor: Colors.white,
         centerTitle: true,
@@ -308,7 +243,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     padding: const EdgeInsets.only(right: 10),
                     child: _buildRouletteSection(
                       title: 'Step 1: Choose an Adjective',
-                      items: _adjectives,
+                      items: WordLists.adjectives,
                       selected: _selectedAdjective,
                       isSpinning: _isAdjectiveSpinning,
                       rotation: _adjectiveRotation,
@@ -324,7 +259,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     padding: const EdgeInsets.only(left: 10),
                     child: _buildRouletteSection(
                       title: 'Step 2: Choose a Noun',
-                      items: _nouns,
+                      items: WordLists.nouns,
                       selected: _selectedNoun,
                       isSpinning: _isNounSpinning,
                       rotation: _nounRotation,
@@ -397,7 +332,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               child: const Text(
                 'Start Over',
                 style: TextStyle(
-                  fontSize: 16, 
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Courier New',
                 ),
