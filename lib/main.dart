@@ -12,7 +12,7 @@ class DailyThemeRouletteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Daily Theme Roulette',
+      title: 'adjective Laboratory',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
         useMaterial3: true,
@@ -80,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               const SizedBox(height: 20),
               const Text(
-                'Daily Theme Roulette',
+                'adjective Laboratory',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -111,7 +111,28 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final Random _random = Random();
 
   final List<String> _adjectives = [
+    // Tech & New Media
+    'interactive',
+    'generative',
+    'kinetic',
+    'immersive',
     'experimental',
+    'responsive',
+    'procedural',
+    'data-driven',
+    'algorithmic',
+    'bio-inspired',
+    'AI-powered',
+    'sensor-based',
+    'glitchy',
+    'pixel-perfect',
+    'real-time',
+    'crowd-sourced',
+    'augmented',
+    'networked',
+    'open-source',
+    'sustainable',
+    // Classic Artistic
     'mysterious',
     'vibrant',
     'minimalist',
@@ -134,26 +155,26 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   ];
 
   final List<String> _nouns = [
-    'painting',
-    'sculpture',
-    'digital art',
-    'photograph',
-    'installation',
-    'sketch',
-    'collage',
-    'animation',
-    'video',
-    'music',
-    'poem',
-    'story',
-    'dance',
-    'performance',
-    'design',
-    'app',
-    'website',
-    'game',
-    'illustration',
-    'pattern'
+    'media installation',
+    'Arduino project',
+    'IoT device',
+    'mobile app',
+    'VR experience',
+    'AR filter',
+    'interactive website',
+    'generative art',
+    'sound visualization',
+    'LED matrix',
+    'motion sensor',
+    'chatbot',
+    'data visualization',
+    'NFT collection',
+    'game prototype',
+    'neural network',
+    'blockchain app',
+    'drone performance',
+    'smart mirror',
+    'wearable tech'
   ];
 
   String _selectedAdjective = '';
@@ -248,7 +269,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Daily Theme Roulette'),
+        title: const Text('Daily Theme Roulette v1.1'),
         backgroundColor: Colors.black87,
         foregroundColor: Colors.white,
         centerTitle: true,
