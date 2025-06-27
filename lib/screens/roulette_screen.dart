@@ -329,50 +329,6 @@ class _RouletteScreenState extends State<RouletteScreen>
 
               const SizedBox(height: 40),
 
-              // 결과 표시 - Today's Creative Challenge
-              if (_showResult)
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.black87,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      const Text(
-                        "Today's Creative Challenge:",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Courier New',
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        '"$_selectedAdjective $_selectedNoun"',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Courier New',
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-
-              if (_showResult) const SizedBox(height: 40),
-
               // 역할 배정 섹션
               Container(
                 width: double.infinity,

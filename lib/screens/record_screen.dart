@@ -33,7 +33,7 @@ class RecordScreen extends StatelessWidget {
                   children: [
                     _buildWeekRecord('Week 1', 'Experimental Website'),
                     const SizedBox(height: 20),
-                    _buildWeekRecord('Week 2', '?'),
+                    _buildWeekRecord('Week 2', 'Chaotic TouchDesigner Project'),
                     const SizedBox(height: 20),
                     _buildWeekRecord('Week 3', '?'),
                     const SizedBox(height: 20),
