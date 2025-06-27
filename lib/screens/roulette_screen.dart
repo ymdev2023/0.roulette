@@ -314,14 +314,17 @@ class _RouletteScreenState extends State<RouletteScreen>
               const SizedBox(height: 40),
 
               // 발표자 뽑기 섹션
-              _buildRouletteSection(
-                title: 'Who\'s gonna be a presenter?',
-                items: WordLists.presenters,
-                selected: _selectedPresenter,
-                isSpinning: _isPresenterSpinning,
-                rotation: _presenterRotation,
-                onSpin: _spinPresenter,
-                color: Colors.grey[700]!,
+              Container(
+                width: double.infinity,
+                child: _buildRouletteSection(
+                  title: 'Who\'s gonna be a presenter?',
+                  items: WordLists.presenters,
+                  selected: _selectedPresenter,
+                  isSpinning: _isPresenterSpinning,
+                  rotation: _presenterRotation,
+                  onSpin: _spinPresenter,
+                  color: Colors.grey[700]!,
+                ),
               ),
 
               const SizedBox(height: 40),
