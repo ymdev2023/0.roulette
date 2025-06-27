@@ -85,6 +85,7 @@ class WordLists {
     'Mobile Game',
     'PC Game',
     'Art Book',
+    'Podcast',
     'TouchDesigner Project',
     'Something Physical',
     'Whatever You Want',

@@ -17,57 +17,68 @@ class MenuScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
 
-              // About 버튼
-              _buildMenuButton(
-                context,
-                'About',
-                '형용사 실험실 소개',
-                Icons.info_outline,
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AboutScreen()),
+                    // About 버튼
+                    _buildMenuButton(
+                      context,
+                      'About',
+                      '형용사 실험실 소개',
+                      Icons.info_outline,
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AboutScreen()),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Roulette 버튼
+                    _buildMenuButton(
+                      context,
+                      'Roulette',
+                      '창작 주제 뽑기',
+                      Icons.casino,
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RouletteScreen()),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Record 버튼
+                    _buildMenuButton(
+                      context,
+                      'Records',
+                      '기록 보기',
+                      Icons.history,
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RecordScreen()),
+                      ),
+                    ),
+
+                    const SizedBox(height: 40),
+                  ],
                 ),
               ),
+            ),
 
-              const SizedBox(height: 20),
-
-              // Roulette 버튼
-              _buildMenuButton(
-                context,
-                'Roulette',
-                '창작 주제 뽑기',
-                Icons.casino,
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const RouletteScreen()),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Record 버튼
-              _buildMenuButton(
-                context,
-                'Records',
-                '기록 보기',
-                Icons.history,
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RecordScreen()),
-                ),
-              ),
-
-              const SizedBox(height: 40),
-              
-              // 버전 정보
-              Text(
+            // 버전 정보 - 화면 맨 하단에 고정
+            Container(
+              padding: const EdgeInsets.all(20),
+              child: Text(
                 'v1.0',
                 style: TextStyle(
                   fontSize: 12,
@@ -76,10 +87,8 @@ class MenuScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
-              const SizedBox(height: 20),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

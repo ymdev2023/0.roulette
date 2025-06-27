@@ -23,10 +23,13 @@ class _RouletteScreenState extends State<RouletteScreen>
   String _selectedAdjective = '';
   String _selectedNoun = '';
   String _selectedPresenter = '';
+  Map<String, String> _roleAssignments = {}; // 이름 -> 역할 매핑
   bool _isAdjectiveSpinning = false;
   bool _isNounSpinning = false;
   bool _isPresenterSpinning = false;
+  bool _isRoleSpinning = false;
   bool _showResult = false;
+  bool _showRoleResult = false;
 
   @override
   void initState() {
@@ -120,6 +123,39 @@ class _RouletteScreenState extends State<RouletteScreen>
     _presenterController.reset();
   }
 
+  void _assignRoles() async {
+    if (_isRoleSpinning) return;
+
+    setState(() {
+      _isRoleSpinning = true;
+      _showRoleResult = false;
+    });
+
+    // 시뮬레이션을 위한 딜레이
+    await Future.delayed(const Duration(seconds: 2));
+
+    List<String> people = List.from(WordLists.presenters);
+    List<String> roles = ['기획', '개발', '아트'];
+    Map<String, String> assignments = {};
+
+    // 각 역할에 최소 1명씩 배정
+    people.shuffle(_random);
+    for (int i = 0; i < 3 && i < people.length; i++) {
+      assignments[people[i]] = roles[i];
+    }
+
+    // 나머지 사람들에게 랜덤 역할 배정
+    for (int i = 3; i < people.length; i++) {
+      assignments[people[i]] = roles[_random.nextInt(roles.length)];
+    }
+
+    setState(() {
+      _roleAssignments = assignments;
+      _isRoleSpinning = false;
+      _showRoleResult = true;
+    });
+  }
+
   void _checkShowResult() {
     if (_selectedAdjective.isNotEmpty && _selectedNoun.isNotEmpty) {
       setState(() {
@@ -133,7 +169,9 @@ class _RouletteScreenState extends State<RouletteScreen>
       _selectedAdjective = '';
       _selectedNoun = '';
       _selectedPresenter = '';
+      _roleAssignments = {};
       _showResult = false;
+      _showRoleResult = false;
     });
   }
 
@@ -190,7 +228,7 @@ class _RouletteScreenState extends State<RouletteScreen>
                               isSpinning: _isNounSpinning,
                               rotation: _nounRotation,
                               onSpin: _spinNoun,
-                              color: Colors.grey[600]!,
+                              color: Colors.grey[700]!,
                             ),
                           ),
                         ),
@@ -221,25 +259,12 @@ class _RouletteScreenState extends State<RouletteScreen>
                           isSpinning: _isNounSpinning,
                           rotation: _nounRotation,
                           onSpin: _spinNoun,
-                          color: Colors.grey[600]!,
+                          color: Colors.grey[700]!,
                         ),
                       ],
                     );
                   }
                 },
-              ),
-
-              const SizedBox(height: 40),
-
-              // 발표자 뽑기 섹션
-              _buildRouletteSection(
-                title: 'Who\'s gonna be a presenter?',
-                items: WordLists.presenters,
-                selected: _selectedPresenter,
-                isSpinning: _isPresenterSpinning,
-                rotation: _presenterRotation,
-                onSpin: _spinPresenter,
-                color: Colors.grey[500]!,
               ),
 
               const SizedBox(height: 40),
@@ -286,13 +311,140 @@ class _RouletteScreenState extends State<RouletteScreen>
                   ),
                 ),
 
+              const SizedBox(height: 40),
+
+              // 발표자 뽑기 섹션
+              _buildRouletteSection(
+                title: 'Who\'s gonna be a presenter?',
+                items: WordLists.presenters,
+                selected: _selectedPresenter,
+                isSpinning: _isPresenterSpinning,
+                rotation: _presenterRotation,
+                onSpin: _spinPresenter,
+                color: Colors.grey[700]!,
+              ),
+
+              const SizedBox(height: 40),
+
+              // 결과 표시 - Today's Creative Challenge
+              if (_showResult)
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.black87,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Today's Creative Challenge:",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Courier New',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        '"$_selectedAdjective $_selectedNoun"',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                          fontFamily: 'Courier New',
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+
+              if (_showResult) const SizedBox(height: 40),
+
+              // 역할 배정 섹션
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'Role Assignment',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[700],
+                        fontFamily: 'Courier New',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    if (_showRoleResult && _roleAssignments.isNotEmpty) ...[
+                      // 역할별로 그룹화해서 표시
+                      _buildRoleGroup('기획', Icons.lightbulb, Colors.grey[600]!),
+                      const SizedBox(height: 15),
+                      _buildRoleGroup('개발', Icons.code, Colors.grey[600]!),
+                      const SizedBox(height: 15),
+                      _buildRoleGroup('아트', Icons.palette, Colors.grey[600]!),
+                    ] else ...[
+                      Icon(
+                        Icons.group,
+                        size: 60,
+                        color: Colors.grey[500],
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _isRoleSpinning ? null : _assignRoles,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[700],
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: Text(
+                          _isRoleSpinning
+                              ? 'Assigning Roles...'
+                              : 'Assign Roles!',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'Courier New',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+
               const SizedBox(height: 30),
 
               // 다시 하기 버튼
               ElevatedButton(
                 onPressed: _reset,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[600],
+                  backgroundColor: Colors.grey[700],
                   foregroundColor: Colors.white,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
@@ -438,7 +590,8 @@ class _RouletteScreenState extends State<RouletteScreen>
               style: ElevatedButton.styleFrom(
                 backgroundColor: color,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -453,6 +606,63 @@ class _RouletteScreenState extends State<RouletteScreen>
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRoleGroup(String role, IconData icon, Color color) {
+    List<String> peopleInRole = _roleAssignments.entries
+        .where((entry) => entry.value == role)
+        .map((entry) => entry.key)
+        .toList();
+
+    if (peopleInRole.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(width: 10),
+          Text(
+            role,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+              fontFamily: 'Courier New',
+            ),
+          ),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Wrap(
+              spacing: 8,
+              children: peopleInRole
+                  .map((person) => Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: color.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Text(
+                          person,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: color.withOpacity(0.8),
+                            fontFamily: 'Courier New',
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
         ],
       ),
     );
