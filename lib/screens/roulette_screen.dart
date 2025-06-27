@@ -13,19 +13,23 @@ class _RouletteScreenState extends State<RouletteScreen>
     with TickerProviderStateMixin {
   late AnimationController _adjectiveController;
   late AnimationController _nounController;
+  late AnimationController _projectController;
   late AnimationController _presenterController;
   late Animation<double> _adjectiveRotation;
   late Animation<double> _nounRotation;
+  late Animation<double> _projectRotation;
   late Animation<double> _presenterRotation;
 
   final Random _random = Random();
 
   String _selectedAdjective = '';
   String _selectedNoun = '';
+  String _selectedProjectType = '';
   String _selectedPresenter = '';
   Map<String, String> _roleAssignments = {}; // 이름 -> 역할 매핑
   bool _isAdjectiveSpinning = false;
   bool _isNounSpinning = false;
+  bool _isProjectSpinning = false;
   bool _isPresenterSpinning = false;
   bool _isRoleSpinning = false;
   bool _showResult = false;
@@ -42,6 +46,10 @@ class _RouletteScreenState extends State<RouletteScreen>
       duration: const Duration(seconds: 2),
       vsync: this,
     );
+    _projectController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
     _presenterController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -53,6 +61,9 @@ class _RouletteScreenState extends State<RouletteScreen>
     _nounRotation = Tween<double>(begin: 0, end: 10 * 2 * pi).animate(
       CurvedAnimation(parent: _nounController, curve: Curves.easeOut),
     );
+    _projectRotation = Tween<double>(begin: 0, end: 10 * 2 * pi).animate(
+      CurvedAnimation(parent: _projectController, curve: Curves.easeOut),
+    );
     _presenterRotation = Tween<double>(begin: 0, end: 10 * 2 * pi).animate(
       CurvedAnimation(parent: _presenterController, curve: Curves.easeOut),
     );
@@ -62,6 +73,7 @@ class _RouletteScreenState extends State<RouletteScreen>
   void dispose() {
     _adjectiveController.dispose();
     _nounController.dispose();
+    _projectController.dispose();
     _presenterController.dispose();
     super.dispose();
   }
@@ -102,6 +114,26 @@ class _RouletteScreenState extends State<RouletteScreen>
     });
 
     _nounController.reset();
+    _checkShowResult();
+  }
+
+  void _spinProjectType() async {
+    if (_isProjectSpinning) return;
+
+    setState(() {
+      _isProjectSpinning = true;
+      _showResult = false;
+    });
+
+    await _projectController.forward();
+
+    setState(() {
+      _selectedProjectType = WordLists
+          .projectTypes[_random.nextInt(WordLists.projectTypes.length)];
+      _isProjectSpinning = false;
+    });
+
+    _projectController.reset();
     _checkShowResult();
   }
 
@@ -157,7 +189,9 @@ class _RouletteScreenState extends State<RouletteScreen>
   }
 
   void _checkShowResult() {
-    if (_selectedAdjective.isNotEmpty && _selectedNoun.isNotEmpty) {
+    if (_selectedAdjective.isNotEmpty &&
+        _selectedNoun.isNotEmpty &&
+        _selectedProjectType.isNotEmpty) {
       setState(() {
         _showResult = true;
       });
@@ -168,6 +202,7 @@ class _RouletteScreenState extends State<RouletteScreen>
     setState(() {
       _selectedAdjective = '';
       _selectedNoun = '';
+      _selectedProjectType = '';
       _selectedPresenter = '';
       _roleAssignments = {};
       _showResult = false;
@@ -261,6 +296,19 @@ class _RouletteScreenState extends State<RouletteScreen>
                           onSpin: _spinNoun,
                           color: Colors.grey[700]!,
                         ),
+
+                        const SizedBox(height: 20),
+
+                        // 프로젝트 타입 룰렛
+                        _buildRouletteSection(
+                          title: 'Step 3: Choose Project Type',
+                          items: WordLists.projectTypes,
+                          selected: _selectedProjectType,
+                          isSpinning: _isProjectSpinning,
+                          rotation: _projectRotation,
+                          onSpin: _spinProjectType,
+                          color: Colors.grey[700]!,
+                        ),
                       ],
                     );
                   }
@@ -303,6 +351,16 @@ class _RouletteScreenState extends State<RouletteScreen>
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.italic,
+                          fontFamily: 'Courier New',
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 15),
+                      Text(
+                        'Project Type: $_selectedProjectType',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
                           fontFamily: 'Courier New',
                         ),
                         textAlign: TextAlign.center,
@@ -438,6 +496,8 @@ class _RouletteScreenState extends State<RouletteScreen>
   }) {
     // 발표자 섹션인지 확인
     bool isPresenterSection = items == WordLists.presenters;
+    // 프로젝트 타입 섹션인지 확인
+    bool isProjectSection = items == WordLists.projectTypes;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -484,7 +544,11 @@ class _RouletteScreenState extends State<RouletteScreen>
                     ),
                     child: Center(
                       child: Icon(
-                        isPresenterSection ? Icons.person : Icons.casino,
+                        isPresenterSection
+                            ? Icons.person
+                            : isProjectSection
+                                ? Icons.group_work
+                                : Icons.casino,
                         size: isPresenterSection ? 50 : 40,
                         color: color,
                       ),
@@ -535,7 +599,7 @@ class _RouletteScreenState extends State<RouletteScreen>
                   : Text(
                       selected,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: isProjectSection ? 14 : 16,
                         fontWeight: FontWeight.bold,
                         color: color,
                         fontFamily: 'Courier New',

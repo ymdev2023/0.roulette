@@ -74,6 +74,7 @@ class WordLists {
     'Sound Visualization',
     'LED Matrix',
     'Motion Sensor',
+    'Data Analysis',
     'Chatbot',
     'Data Visualization',
     'NFT Collection',
@@ -85,10 +86,17 @@ class WordLists {
     'Mobile Game',
     'PC Game',
     'Art Book',
+    'Personal Branding',
+    'Marketing',
     'Podcast',
     'TouchDesigner Project',
     'Something Physical',
+    'Youtube Channel',
+    'Video',
+    'Illustration',
     'Whatever You Want',
+    '3D Printing',
+    '3D Modeling',
     // Fun additions
     'Something That Moves',
     'Thing That Nobody Uses',
@@ -113,5 +121,11 @@ class WordLists {
     'Yoonmyung Kim',
     'Joonheon Min',
     'Soojeong Han',
+  ];
+
+  // 프로젝트 타입 리스트
+  static const List<String> projectTypes = [
+    'Personal',
+    'Team',
   ];
 }
